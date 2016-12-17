@@ -1,0 +1,35 @@
+<?php
+/**
+ * @file This file contains all the hook implemtations.
+ */
+
+/**
+ * @todo: translation po files
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function moteo_menu() {
+  $items['registration/%'] = array(
+    'title' => 'Vehicle registration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('moteo_registration_form', 1),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'moteo.forms.inc',
+    'file path' => drupal_get_path('module', 'moteo') . '/includes',
+  );
+
+  $items['admin/config/moteo'] = array(
+    'title' => 'Moteo webservice configuration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('moteo_service_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'moteo.admin.inc',
+    'file path' => drupal_get_path('module', 'moteo') . '/includes',
+  );
+
+  return $items;
+}
