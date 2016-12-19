@@ -1,0 +1,208 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  moteo.module: n/a
+#  moteo.info: n/a
+#  includes/MoteoService.inc: n/a
+#  includes/moteo.admin.inc: n/a
+#  includes/moteo.forms.inc: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2016-12-19 22:17+0100\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: moteo.module:11
+msgid "Vehicle registration"
+msgstr ""
+
+#: moteo.module:21
+msgid "Moteo webservice configuration"
+msgstr ""
+
+#: moteo.info:0;0
+msgid "Moteo"
+msgstr ""
+
+#: moteo.info:0
+msgid "Provides integration with the Moteo webservices."
+msgstr ""
+
+#: includes/MoteoService.inc:96
+msgid "The Moteo webservice is being used, but the parameters are not configured."
+msgstr ""
+
+#: includes/MoteoService.inc:97
+msgid "The Moteo webservice is being used, but the parameters are not configured. Please go to the Moteo configuration page to configure them."
+msgstr ""
+
+#: includes/moteo.admin.inc:17
+msgid "Login"
+msgstr ""
+
+#: includes/moteo.admin.inc:26
+msgid "Password"
+msgstr ""
+
+#: includes/moteo.admin.inc:35
+msgid "URL"
+msgstr ""
+
+#: includes/moteo.admin.inc:44
+msgid "Thank you page URL"
+msgstr ""
+
+#: includes/moteo.admin.inc:48
+msgid "This can be an internal (node/1) or external (http://www.google.com) link."
+msgstr ""
+
+#: includes/moteo.forms.inc:28
+msgid "Framenumber"
+msgstr ""
+
+#: includes/moteo.forms.inc:33
+msgid "Warranty start date"
+msgstr ""
+
+#: includes/moteo.forms.inc:38
+msgid "Registration entry date"
+msgstr ""
+
+#: includes/moteo.forms.inc:43
+msgid "Model code"
+msgstr ""
+
+#: includes/moteo.forms.inc:49
+msgid "E-mail"
+msgstr ""
+
+#: includes/moteo.forms.inc:60
+msgid "Private"
+msgstr ""
+
+#: includes/moteo.forms.inc:60
+msgid "Organisation"
+msgstr ""
+
+#: includes/moteo.forms.inc:66
+msgid "Organisation name"
+msgstr ""
+
+#: includes/moteo.forms.inc:83
+msgid "First name"
+msgstr ""
+
+#: includes/moteo.forms.inc:99
+msgid "Last name"
+msgstr ""
+
+#: includes/moteo.forms.inc:115
+msgid "Date of birth"
+msgstr ""
+
+#: includes/moteo.forms.inc:125
+msgid "Country"
+msgstr ""
+
+#: includes/moteo.forms.inc:132
+msgid "Postal code"
+msgstr ""
+
+#: includes/moteo.forms.inc:140
+msgid "Postal code letters"
+msgstr ""
+
+#: includes/moteo.forms.inc:153
+msgid "City"
+msgstr ""
+
+#: includes/moteo.forms.inc:161
+msgid "Street"
+msgstr ""
+
+#: includes/moteo.forms.inc:169
+msgid "Number"
+msgstr ""
+
+#: includes/moteo.forms.inc:177
+msgid "Tomos is allowed to contact me for commercial reasons."
+msgstr ""
+
+#: includes/moteo.forms.inc:183
+msgid "Yes, I would like to request a free \"ANWB Pechpas\"."
+msgstr ""
+
+#: includes/moteo.forms.inc:195
+msgid "I'm already a member of the ANWB."
+msgstr ""
+
+#: includes/moteo.forms.inc:207
+msgid "I would like to request a free trial of the ScooterXPress magazine."
+msgstr ""
+
+#: includes/moteo.forms.inc:219
+msgid "Save"
+msgstr ""
+
+#: includes/moteo.forms.inc:224
+msgid "Something went wrong while getting the registration. Please try again later."
+msgstr ""
+
+#: includes/moteo.forms.inc:239
+msgid "The provided e-mailaddress is not valid."
+msgstr ""
+
+#: includes/moteo.forms.inc:244
+msgid "The name of the organisation is required."
+msgstr ""
+
+#: includes/moteo.forms.inc:249
+msgid "First name is required."
+msgstr ""
+
+#: includes/moteo.forms.inc:252
+msgid "Last name is required."
+msgstr ""
+
+#: includes/moteo.forms.inc:258
+msgid "Postal code is required when requesting an ANWB membership."
+msgstr ""
+
+#: includes/moteo.forms.inc:261
+msgid "Postal code letters are required when requesting an ANWB membership."
+msgstr ""
+
+#: includes/moteo.forms.inc:264
+msgid "City is required when requesting an ANWB membership."
+msgstr ""
+
+#: includes/moteo.forms.inc:267
+msgid "Street is required when requesting an ANWB membership."
+msgstr ""
+
+#: includes/moteo.forms.inc:270
+msgid "House number is required when requesting an ANWB membership."
+msgstr ""
+
+#: includes/moteo.forms.inc:318
+msgid "Thank you, your registration was saved successfully."
+msgstr ""
+
+#: includes/moteo.forms.inc:324
+msgid "An error occured while saving your registration, please try again later."
+msgstr ""
+
+#: includes/moteo.forms.inc:325
+msgid "Something went wrong while saving registration with code: !code"
+msgstr ""
+

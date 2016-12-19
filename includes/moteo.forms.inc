@@ -56,8 +56,9 @@ function moteo_registration_form($form, &$form_state, $code) {
     $form['is_private_owner'] = array(
       '#type' => 'radios',
       '#title' => NULL,
-      '#default_value' => $registration->IsPrivateOwner,
+      '#default_value' => (int) $registration->IsPrivateOwner,
       '#options' => array(1 => t('Private'), 0 => t('Organisation')),
+      '#required' => TRUE,
     );
 
     $form['organisation_name'] = array(
@@ -71,6 +72,9 @@ function moteo_registration_form($form, &$form_state, $code) {
         'visible' => array(
           ':input[name="is_private_owner"]' => array('value' => 0),
         ),
+        'required' => array(
+          ':input[name="is_private_owner"]' => array('value' => 0),
+        ),
       ),
     );
 
@@ -80,7 +84,14 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#default_value' => $registration->FirstName,
       '#size' => 60,
       '#maxlength' => 128,
-      '#required' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="is_private_owner"]' => array('value' => 1),
+        ),
+        'required' => array(
+          ':input[name="is_private_owner"]' => array('value' => 1),
+        ),
+      ),
     );
 
     $form['last_name'] = array(
@@ -89,7 +100,14 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#default_value' => $registration->LastName,
       '#size' => 60,
       '#maxlength' => 128,
-      '#required' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="is_private_owner"]' => array('value' => 1),
+        ),
+        'required' => array(
+          ':input[name="is_private_owner"]' => array('value' => 1),
+        ),
+      ),
     );
 
     $form['birth_date'] = array(
@@ -98,7 +116,7 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#date_label_position' => 'invisible',
       '#date_format' => 'd/m/Y',
       '#date_year_range' => '-99:+0',
-      '#default_value' => $registration->BirthDate,
+      '#default_value' => empty($registration->BirthDate) ? '' : date('Y-m-d', strtotime(str_replace('/', '-', $registration->BirthDate))),
     );
 
     $country_list = country_get_list();
@@ -154,15 +172,6 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#maxlength' => 16,
     );
 
-    $form['license_plate'] = array(
-      '#type' => 'textfield',
-      '#title' => t('License plate'),
-      '#default_value' => $registration->LicensePlate,
-      '#size' => 60,
-      '#maxlength' => 128,
-      '#required' => TRUE,
-    );
-
     $form['allow_email_contact'] = array(
       '#type' => 'checkbox',
       '#title' => t('Tomos is allowed to contact me for commercial reasons.'),
@@ -195,7 +204,7 @@ function moteo_registration_form($form, &$form_state, $code) {
 
     $form['scooter_x_press'] = array(
       '#type' => 'checkbox',
-      '#title' => t('I would like to request a free trail of the ScooterXPress magazine.'),
+      '#title' => t('I would like to request a free trial of the ScooterXPress magazine.'),
       '#default_value' => $registration->ScooterXPress,
       '#states' => array(
         'visible' => array(
@@ -225,8 +234,41 @@ function moteo_registration_form($form, &$form_state, $code) {
  * @param array $form_state
  */
 function moteo_registration_form_validate($form, &$form_state) {
+  // Force a valid e-mail address.
   if (!valid_email_address($form_state['values']['email_address'])) {
-    form_set_error('email', t('The provided e-mailaddress is not valid.'));
+    form_set_error('email_address', t('The provided e-mailaddress is not valid.'));
+  }
+
+  // Require the name of the organisation if organisation is selected.
+  if ($form_state['values']['is_private_owner'] == 0 && empty($form_state['values']['organisation_name'])) {
+    form_set_error('organisation_name', t('The name of the organisation is required.'));
+  }
+
+  // Require first name and last name if private owner is selected.
+  if ($form_state['values']['is_private_owner'] == 1 && empty($form_state['values']['first_name'])) {
+    form_set_error('first_name', t('First name is required.'));
+  }
+  if ($form_state['values']['is_private_owner'] == 1 && empty($form_state['values']['last_name'])) {
+    form_set_error('last_name', t('Last name is required.'));
+  }
+
+  // Apparently address is required when an ANWB membership is requested.
+  if (($form_state['values']['country_code'] == 'NL' && $form_state['values']['ANWB_requested'] == 1)) {
+    if (empty($form_state['values']['postal_code'])) {
+      form_set_error('postal_code', t('Postal code is required when requesting an ANWB membership.'));
+    }
+    if (empty($form_state['values']['postal_code_letters'])) {
+      form_set_error('postal_code_letters', t('Postal code letters are required when requesting an ANWB membership.'));
+    }
+    if (empty($form_state['values']['city'])) {
+      form_set_error('city', t('City is required when requesting an ANWB membership.'));
+    }
+    if (empty($form_state['values']['street'])) {
+      form_set_error('street', t('Street is required when requesting an ANWB membership.'));
+    }
+    if (empty($form_state['values']['house_number'])) {
+      form_set_error('house_number', t('House number is required when requesting an ANWB membership.'));
+    }
   }
 }
 
@@ -242,6 +284,9 @@ function moteo_registration_form_submit($form, &$form_state) {
   // Remove all non-field information from the form_state['values'] so it can be looped safely.
   $dummy_form_state = $form_state;
   form_state_values_clean($dummy_form_state);
+
+  // Cast birth_date field to string because the webservice cannot handle NULL for the BirthDate.
+  $dummy_form_state['values']['birth_date'] = (string) $dummy_form_state['values']['birth_date'];
 
   $one_time_properties = array(
     'ANWB_requested',
@@ -271,6 +316,9 @@ function moteo_registration_form_submit($form, &$form_state) {
   $service = new MoteoService();
   if ($service->saveRegistration($registration)) {
     drupal_set_message(t('Thank you, your registration was saved successfully.'), 'status');
+    if (!is_null(variable_get('moteo_service_redirect_url'))) {
+      drupal_goto(variable_get('moteo_service_redirect_url'));
+    }
   }
   else {
     drupal_set_message(t('An error occured while saving your registration, please try again later.'), 'error');

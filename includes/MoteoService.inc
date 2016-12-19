@@ -75,20 +75,11 @@ class MoteoService {
         'registration' => $registration,
       ));
 
-      //    $result = $client->__soapCall('REG_SaveRegistration', array(
-      //        array(
-      //          'login' => 'WEBSERVICEBRANDLENL',
-      //          'password' => 'ARBP7R49KSXWN9YE',
-      //          'registration' => $registration,
-      //        )
-      //      )
-      //    );
-
       if ($result->REG_SaveRegistrationResult->succesfull) {
         return TRUE;
       }
       else {
-        watchdog('moteo', t($result->REG_GetRegistrationResult->message));
+        watchdog('moteo', t($result->REG_SaveRegistrationResult->message));
       }
     }
 

@@ -39,5 +39,14 @@ function moteo_service_admin_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  $form['moteo_service_redirect_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Thank you page URL'),
+    '#default_value' => variable_get('moteo_service_redirect_url'),
+    '#size' => 60,
+    '#maxlength' => 256,
+    '#description' => t('This can be an internal (node/1) or external (http://www.google.com) link.'),
+  );
+
   return system_settings_form($form);
 }

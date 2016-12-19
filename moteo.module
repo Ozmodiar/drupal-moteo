@@ -4,10 +4,6 @@
  */
 
 /**
- * @todo: translation po files
- */
-
-/**
  * Implements hook_menu().
  */
 function moteo_menu() {
