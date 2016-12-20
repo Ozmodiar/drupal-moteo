@@ -1,7 +1,7 @@
 name = Moteo
 description = "Provides integration with the Moteo webservices."
 package = Moteo
-version = "7.x-1.0-dev"
+version = "7.x-1.0"
 core = "7.x"
 project = "moteo"
 

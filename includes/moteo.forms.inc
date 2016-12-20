@@ -127,25 +127,16 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#default_value' => $registration->CountryCode,
     );
 
+    $postal_code_full = $registration->PostalCode;
+    if (!empty($registration->PostalCodeLetters)) {
+      $postal_code_full .= ' ' . $registration->PostalCodeLetters;
+    }
     $form['postal_code'] = array(
       '#type' => 'textfield',
       '#title' => t('Postal code'),
-      '#default_value' => $registration->PostalCode,
+      '#default_value' => $postal_code_full,
       '#size' => 16,
       '#maxlength' => 16,
-    );
-
-    $form['postal_code_letters'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Postal code letters'),
-      '#default_value' => $registration->PostalCodeLetters,
-      '#size' => 16,
-      '#maxlength' => 16,
-      '#states' => array(
-        'visible' => array(
-          ':input[name="country_code"]' => array('value' => 'NL'),
-        ),
-      ),
     );
 
     $form['city'] = array(
@@ -185,6 +176,7 @@ function moteo_registration_form($form, &$form_state, $code) {
       '#states' => array(
         'visible' => array(
           ':input[name="country_code"]' => array('value' => 'NL'),
+          ':input[name="is_private_owner"]' => array('value' => 1),
         ),
       ),
       '#disabled' => $registration->RegistrationSavedByCustomer ? TRUE : FALSE,
@@ -281,6 +273,12 @@ function moteo_registration_form_validate($form, &$form_state) {
 function moteo_registration_form_submit($form, &$form_state) {
   $registration = $form_state['storage']['registration'];
 
+  $one_time_properties = array(
+    'ANWB_requested',
+    'ANWB_member',
+    'scooter_x_press',
+  );
+
   // Remove all non-field information from the form_state['values'] so it can be looped safely.
   $dummy_form_state = $form_state;
   form_state_values_clean($dummy_form_state);
@@ -288,11 +286,15 @@ function moteo_registration_form_submit($form, &$form_state) {
   // Cast birth_date field to string because the webservice cannot handle NULL for the BirthDate.
   $dummy_form_state['values']['birth_date'] = (string) $dummy_form_state['values']['birth_date'];
 
-  $one_time_properties = array(
-    'ANWB_requested',
-    'ANWB_member',
-    'scooter_x_press',
-  );
+  // Since the PostalCode letters are omitted from the form, extract them from the postcode (NL only).
+  if ($dummy_form_state['values']['country_code'] == 'NL') {
+    $dummy_form_state['values']['postal_code_letters'] = '';
+    $postal_code_parts = explode(' ', $dummy_form_state['values']['postal_code']);
+    $dummy_form_state['values']['postal_code'] = $postal_code_parts[0];
+    if (isset($postal_code_parts[1]) && !empty($postal_code_parts[1])) {
+      $dummy_form_state['values']['postal_code_letters'] = $postal_code_parts[1];
+    }
+  }
 
   foreach ($dummy_form_state['values'] as $key => $value) {
     // Extra check for users that were able to bypass the disabled fields and managed to change the form values anyway.
@@ -316,8 +318,9 @@ function moteo_registration_form_submit($form, &$form_state) {
   $service = new MoteoService();
   if ($service->saveRegistration($registration)) {
     drupal_set_message(t('Thank you, your registration was saved successfully.'), 'status');
-    if (!is_null(variable_get('moteo_service_redirect_url'))) {
-      drupal_goto(variable_get('moteo_service_redirect_url'));
+    $redirect_url = variable_get('moteo_service_redirect_url');
+    if (!is_null($redirect_url) && !empty($redirect_url)) {
+      drupal_goto($redirect_url);
     }
   }
   else {
